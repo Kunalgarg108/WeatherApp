@@ -11,9 +11,10 @@ function Weather() {
   const [city, setCity] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [weather, setWeather] = useState(null);
-const API_key = "";
+  const API_key = import.meta.env.VITE_API_KEY;
 
-   useEffect(() => {
+  console.log(API_key);
+  useEffect(() => {
     getUserLocation();
   }, []);
   useEffect(() => {
@@ -51,6 +52,10 @@ const API_key = "";
           temperature: data.main.temp,
           wind: data.wind.speed,
           humidity: data.main.humidity,
+          feels_like: data.main.feels_like,
+          visibility: data.visibility,
+          pressure: data.main.pressure,
+          grnd_level: data.main.grnd_level,
           icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
         });
       })
@@ -107,7 +112,7 @@ const API_key = "";
 
   return (
     <>
-      <div className='w-[50%] p-10 rounded-[10px] bg-gradient-to-br from-[#2f4680] to-[#500ae4] flex flex-col items-center self-center'>
+      <div className='w-[51%] h-[82%] p-10 rounded-[10px] bg-gradient-to-br from-[rgba(47,70,128,0.4)] to-[rgba(112, 51, 246, 0.4)] backdrop-blur-[50px] shadow-lg flex flex-col items-center self-center'>
         <div className='flex items-center gap-2 h-12 w-[70%]'>
 
           <div className='relative w-[90%] max-w-[600px] ml-[15px]'>
@@ -152,30 +157,86 @@ const API_key = "";
           </div>
         </div>
 
-        <br />
+        
 
         <div className="px-20 py-5 flex text-white justify-between rounded-[10px]">
           <div>
-            <h2 className='text-[40px] text-center'>{weather ? `${weather.city}` : '__________'}</h2>
-            <div className="flex justify-center">
-              <img
-                src={weather ? weather.icon : "https://c8.alamy.com/comp/2GRERRE/a-sunny-weather-condition-2GRERRE.jpg"}
-                alt="weather"
-                className='w-[90px] h-[90px] my-2'
-              />
+            <h2 className='text-[32px] text-center'>{weather ? `${weather.city}` : '__________'}</h2>
+            <div className='flex gap-1 items-center justify-center'>
+              <p className='text-[48px]'>{weather ? `${weather.temperature}°C` : '___ °C'}</p>
             </div>
-            <div className='flex gap-1'>
-              <FaTemperatureLow className='text-[28px]' />
-              <p className='text-[24px]'>Temperature: {weather ? `${weather.temperature}°C` : '___ °C'}</p>
+
+            <br />
+            <div className="grid grid-cols-3 gap-2 text-white mt-100">
+
+
+              {/* Feels Like */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-8 text-center p-4">Feels Like: {weather ? `${weather.feels_like}°C` : '___ °C'}</p>
+              </div>
+
+              {/* Wind Speed */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+
+                <p className="text-[16px] w-full h-8 text-center">Wind: {weather ? `${weather.wind} m/s` : '___ m/s'}</p>
+              </div>
+
+              {/* Visibility */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl">
+                <p className="text-[16px] w-full h-8 text-center">Visibility: {weather ? `${weather.visibility} m` : '___ m'}</p>
+              </div>
+
+              {/* Barometer */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl">
+                <p className="text-[16px] w-full h-8 text-center">Pressure: {weather ? `${weather.pressure} hPa` : '___ hPa'}</p>
+              </div>
+
+              {/* Humidity */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl">
+                <p className="text-[16px] w-full h-8 text-center">Humidity: {weather ? `${weather.humidity}%` : '___%'}</p>
+              </div>
+
+              {/* Sea Level */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl">
+                <p className="text-[16px] w-full h-8 text-center">Ground Level: {weather ? `${weather.grnd_level} hPa` : '___ hPa'}</p>
+              </div>
             </div>
-            <div className='flex gap-1'>
-              <TiWeatherWindyCloudy className='text-[30px]' />
-              <p className='text-[24px]'>Wind Speed: {weather ? `${weather.wind} m/s` : '___ m/s'}</p>
+            <br />
+             <div className="grid grid-cols-3 gap-2 text-white ">
+
+
+              {/* Feels Like */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-24 text-center p-4">Feels Like: {weather ? `${weather.feels_like}°C` : '___ °C'}</p>
+              </div>
+
+              {/* Wind Speed */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+
+                <p className="text-[16px] w-full h-24 text-center">Wind: {weather ? `${weather.wind} m/s` : '___ m/s'}</p>
+              </div>
+
+              {/* Visibility */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-24 text-center">Visibility: {weather ? `${weather.visibility} m` : '___ m'}</p>
+              </div>
+
+              {/* Barometer */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-24 text-center">Pressure: {weather ? `${weather.pressure} hPa` : '___ hPa'}</p>
+              </div>
+
+              {/* Humidity */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-24 text-center">Humidity: {weather ? `${weather.humidity}%` : '___%'}</p>
+              </div>
+
+              {/* Sea Level */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
+                <p className="text-[16px] w-full h-24 text-center">Ground Level: {weather ? `${weather.grnd_level} hPa` : '___ hPa'}</p>
+              </div>
             </div>
-            <div className='flex gap-1'>
-              <WiHumidity className='text-[30px]' />
-              <p className='text-[24px]'>Humidity: {weather ? `${weather.humidity}%` : '___%'}</p>
-            </div>
+
           </div>
         </div>
       </div>

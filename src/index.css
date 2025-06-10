@@ -7,9 +7,13 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
 .App{
   display: grid;
-  background-color: rgb(173, 173, 211);
+  background-image: url("https://th.bing.com/th/id/R.b9fa792566057d994c7f0f9e7bb1efa7?rik=9t6rfUN9GKg51w&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f03%2fSun-And-Clouds-Wallpaper-HD.jpg&ehk=omvtaVq3KTT0Es9u563E8oRM5LxSxV%2f1H4%2fQrIYEFGo%3d&risl=&pid=ImgRaw&r=0");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   min-height: 100vh;
   place-items: center;
 }
