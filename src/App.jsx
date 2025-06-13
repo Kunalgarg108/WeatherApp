@@ -3,12 +3,12 @@ import './index.css';
 import Weather from './componenets/Weather';
 import FivedayForcast from './componenets/FivedayForcast';
 function App() {
-  const [count, setCount] = useState(0)
+  const [coordinates, setCoordinates] = useState({ lat: null, lon: null });
 
   return (
     <div className='App'>
-      <Weather/>
-      <FivedayForcast />
+      <Weather setCoordinates={setCoordinates}/>
+      <FivedayForcast lat={coordinates.lat} lon={coordinates.lon} />
     </div>
   )
 }

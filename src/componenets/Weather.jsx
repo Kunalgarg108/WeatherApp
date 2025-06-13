@@ -7,13 +7,15 @@ import { FaTemperatureLow } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Weather() {
+function Weather({ setCoordinates }) {
   const [city, setCity] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [weather, setWeather] = useState(null);
   const API_key = import.meta.env.VITE_API_KEY;
+  const [forecast, setForecast] = useState([]);
+  const [lat, setLat] = useState(null);
+  const [lon, setLon] = useState(null);
 
-  console.log(API_key);
   useEffect(() => {
     getUserLocation();
   }, []);
@@ -22,7 +24,6 @@ function Weather() {
       setSuggestions([]);
       return;
     }
-
     const timeoutId = setTimeout(() => {
       fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${API_key}`)
         .then(res => res.json())
@@ -35,6 +36,16 @@ function Weather() {
     return () => clearTimeout(timeoutId);
   }, [city]);
 
+  useEffect(() => {
+    if (lat && lon) {
+      fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_key}&units=metric`)
+        .then(res => res.json())
+        .then(data => {
+          setForecast(data.list); // all 3-hourly forecasts
+        });
+    }
+  }, [lat, lon]);
+
   const selectCity = (name, lat, lon) => {
     setCity(name);
     setSuggestions([]);
@@ -43,6 +54,8 @@ function Weather() {
 
   // Fetch weather by coordinates
   const getWeatherDetails = (lat, lon, name) => {
+    setLat(lat);
+    setLon(lon);
     const weather_api = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_key}&units=metric`;
     fetch(weather_api)
       .then(res => res.json())
@@ -75,6 +88,9 @@ function Weather() {
       .then(data => {
         if (data.cod === 200) {
           getWeatherDetails(data.coord.lat, data.coord.lon, data.name);
+          setCoordinates({ lat: data.coord.lat, lon: data.coord.lon });
+          setLat(lat);
+          setLon(lon);
           setSuggestions([]);
         } else {
           alert(data.message);
@@ -95,6 +111,9 @@ function Weather() {
             if (data.length > 0) {
               const { name, lat, lon } = data[0];
               getWeatherDetails(lat, lon, name);
+              setCoordinates({ lat: lat, lon: lon });
+              setLat(lat);
+              setLon(lon);
             } else {
               toast.error("Unable to find location details.");
             }
@@ -112,7 +131,7 @@ function Weather() {
 
   return (
     <>
-      <div className='w-[51%] h-[82%] p-10 rounded-[10px] bg-gradient-to-br from-[rgba(47,70,128,0.4)] to-[rgba(112, 51, 246, 0.4)] backdrop-blur-[50px] shadow-lg flex flex-col items-center self-center'>
+      <div className='w-[51%] p-10 rounded-[10px] bg-gradient-to-br from-[rgba(47,70,128,0.4)] to-[rgba(112, 51, 246, 0.4)] backdrop-blur-[50px] shadow-lg flex flex-col items-center self-center'>
         <div className='flex items-center gap-2 h-12 w-[70%]'>
 
           <div className='relative w-[90%] max-w-[600px] ml-[15px]'>
@@ -157,7 +176,7 @@ function Weather() {
           </div>
         </div>
 
-        
+
 
         <div className="px-20 py-5 flex text-white justify-between rounded-[10px]">
           <div>
@@ -202,39 +221,23 @@ function Weather() {
               </div>
             </div>
             <br />
-             <div className="grid grid-cols-3 gap-2 text-white ">
 
 
-              {/* Feels Like */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-                <p className="text-[16px] w-full h-24 text-center p-4">Feels Like: {weather ? `${weather.feels_like}°C` : '___ °C'}</p>
-              </div>
-
-              {/* Wind Speed */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-
-                <p className="text-[16px] w-full h-24 text-center">Wind: {weather ? `${weather.wind} m/s` : '___ m/s'}</p>
-              </div>
-
-              {/* Visibility */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-                <p className="text-[16px] w-full h-24 text-center">Visibility: {weather ? `${weather.visibility} m` : '___ m'}</p>
-              </div>
-
-              {/* Barometer */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-                <p className="text-[16px] w-full h-24 text-center">Pressure: {weather ? `${weather.pressure} hPa` : '___ hPa'}</p>
-              </div>
-
-              {/* Humidity */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-                <p className="text-[16px] w-full h-24 text-center">Humidity: {weather ? `${weather.humidity}%` : '___%'}</p>
-              </div>
-
-              {/* Sea Level */}
-              <div className="flex items-center justify-center gap-2 p-4 bg-gray-800 rounded-xl w-60">
-                <p className="text-[16px] w-full h-24 text-center">Ground Level: {weather ? `${weather.grnd_level} hPa` : '___ hPa'}</p>
-              </div>
+            <div className="grid grid-cols-3 grid-rows-2 gap-2 text-white">
+              {forecast.slice(0, 6).map((item, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center justify-center bg-gray-800 rounded-xl w-55"
+                >
+                  <p className="text-[16px] text-center">{new Date(item.dt_txt).toLocaleString()}</p>
+                  <img
+                    src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                    alt={item.weather[0].description}
+                    className="w-16 h-16"
+                  />
+                  <p className="text-[16px]">Temp: {item.main.temp}°C</p>
+                </div>
+              ))}
             </div>
 
           </div>
