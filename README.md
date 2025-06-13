@@ -7,3 +7,6 @@ A sleek and responsive weather application built with React + Vite, styled using
 - 📊 4-day weather forecast .
 - 📜 Search suggestions dropdown while typing a city name.
 - ⚙️ Fully responsive, styled using Tailwind CSS.
+
+## 📸 Screenshots
+![Uploading Screenshot 2025-06-13 132943.png…]()
