@@ -38,7 +38,7 @@ npm install
 - Copy the generated API key
 
 ### 4️⃣ Create .env File
-Create a .env file in the root directory and add your Firebase credentials:
+Create a .env file in the root directory:
 ```sh
 VITE_API_KEY=Your API Key
 
