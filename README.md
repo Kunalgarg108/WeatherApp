@@ -9,7 +9,7 @@ A sleek and responsive weather application built with React + Vite, styled using
 - ⚙️ Fully responsive, styled using Tailwind CSS.
 
 ## 📸 Screenshot
-![Screenshot Description](./assets/Screenshot%202025-06-13%20132943.png)
+![Screenshot Description](./src/assets/Screenshot%202025-06-13%20132943.png)
 
 ## 🚀 Tech Stack
 - React+Vite
