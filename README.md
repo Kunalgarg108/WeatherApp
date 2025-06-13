@@ -18,4 +18,7 @@ A sleek and responsive weather application built with React + Vite, styled using
 - React Icons
 - React Toastify
 
+## Steps
+'''base
+
   
